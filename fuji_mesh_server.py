@@ -6,6 +6,7 @@ import math
 import os
 import requests
 from pubsub import pub
+from datetime import datetime
 
 import meshtastic
 import meshtastic.serial_interface
@@ -36,7 +37,7 @@ def onReceive(packet, interface):  # pylint: disable=unused-argument
                     time.sleep(0.1)  # small delay between chunks
 
                 payload = bytes([chunk,chunks]) + result[i:i + chunk_size]
-                print(f"Sending chunk {chunk}/{chunks}: payload length={len(payload)-2}")
+                print(f"{datetime.now().isoformat()} - Sending chunk {chunk}/{chunks}: payload length={len(payload)-2}")
 
                 iface.sendData(payload, portNum="PRIVATE_APP")
                 chunk+=1
@@ -84,7 +85,8 @@ if len(ports) == 0:
     sys.exit(0)
 
 connected = False
-usbPort = "/dev/cu.usbserial-2"
+#usbPort = "/dev/cu.usbserial-2"
+usbPort = "/dev/ttyUSB0"
 
 pub.subscribe(onReceive, "meshtastic.receive")
 pub.subscribe(onConnection, "meshtastic.connection.established")
