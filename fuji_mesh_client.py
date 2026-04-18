@@ -27,6 +27,8 @@ def onReceive(packet, interface):  # pylint: disable=unused-argument
             with open(outFile, "wb") as file:
                 result = b"".join(receivedChunks[k] for k in sorted(receivedChunks.keys()))
                 file.write(result)
+                file.close()
+                
             if os.path.exists(watchFile):
                 os.remove(watchFile)
 
